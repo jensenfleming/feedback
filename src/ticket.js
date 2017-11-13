@@ -8,6 +8,21 @@ const users = require('./users');
  *  chat.postMessage to the user who created it
  */
 const sendConfirmation = (ticket) => {
+axios.post('https://hooks.zapier.com/hooks/catch/404051/s6bhfg/', qs.stringify({
+      'Fellow': ticket.fellow,
+      'Email': ticket.email,
+      'Submitter': ticket.userId,
+      'Company': ticket.company,
+      'Partner': ticket.partner,
+      'Budget': ticket.budget,
+      'Date': Date.now(),
+  })).then((result) => {
+    debug('sendConfirmation: %o', result.data);
+  }).catch((err) => {
+    debug('sendConfirmation error: %o', err);
+    console.error(err);
+  });
+
   axios.post('https://slack.com/api/chat.postMessage', qs.stringify({
     token: process.env.SLACK_ACCESS_TOKEN,
     channel: ticket.userId,
